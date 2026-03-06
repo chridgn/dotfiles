@@ -1,9 +1,12 @@
-dotfiles=(
-    ".zshrc"
-    ".zprofile"
-    ".tmux.conf"
-    ".config/neofetch/config.conf"
-    ".config/starship.toml"
+#!/bin/bash
+
+programs=(
+    "zsh:.zshrc"
+    "zsh:.zprofile"
+    "tmux:.tmux.conf"
+    "neofetch:.config/neofetch/config.conf"
+    "starship:.config/starship.toml"
+    "neovim:.config/nvim/init.lua"
 )
 
 function setlink {
@@ -13,11 +16,15 @@ function setlink {
 	rm ~/"$FILE";
     fi 
 
-    sudo ln "$FILE" ~/"$FILE";
+    ln "$FILE" ~/"$FILE";
     echo "symlinked ~/$FILE to $FILE"
 }
 
-for FILE in "${dotfiles[@]}"; do
-    setlink $FILE
+for PROGRAM in "${programs[@]}"; do
+    IFS=":" read -r -a arr <<< "$PROGRAM"
+    if [ "${arr[0]}" != "zsh" ]; then
+        brew install "${arr[0]}"
+    fi
+    setlink "${arr[1]}"
 done
 
