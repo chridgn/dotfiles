@@ -8,7 +8,7 @@ programs=(
     "tmux:.tmux.conf"
     "neofetch:.config/neofetch/config.conf"
     "starship:.config/starship.toml"
-    "neovim:.config/nvim/init.lua"
+    "nvim:.config/nvim/init.lua"
 )
 
 function setlink {
@@ -25,8 +25,18 @@ function setlink {
 for PROGRAM in "${programs[@]}"; do
     IFS=":" read -r -a arr <<< "$PROGRAM"
     if [ "${arr[0]}" != "zsh" ]; then
-        brew install "${arr[0]}"
+        if ! command -v "${arr[0]}" &> /dev/null; then
+	    brew install "${arr[0]}"
+	    else echo "${arr[0]} already installed."
+        fi
     fi
     setlink "${arr[1]}"
 done
+
+# Custom installs
+if ! command -v claude &> /dev/null; then
+    echo "Installing Claude Code"
+    curl -fsSL httpsL//claude.ai/install.sh | bash
+else echo "Claude Code already installed."
+fi
 
