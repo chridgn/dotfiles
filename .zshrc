@@ -34,3 +34,5 @@ v() {
   [[ -z "$file" ]] && return 0
   bash "$HOME/.local/bin/tmux-open-file-pane" "$file"
 }
+
+# with all things configured, start tmux

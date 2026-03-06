@@ -1,4 +1,9 @@
-files=(".zshrc" ".config/starship.toml")
+files=(
+    ".zshrc"
+    ".zprofile"
+    ".config/neofetch/config.conf"
+    ".config/starship.toml"
+)
 
 function setlink {
     local FILE=$1; 
@@ -7,7 +12,8 @@ function setlink {
 	rm ~/"$FILE";
     fi 
 
-    sudo ln $(basename "$FILE") ~/"$FILE";
+    sudo ln "$FILE" ~/"$FILE";
+    echo "symlinked ~/$FILE to $FILE"
 }
 
 for FILE in "${files[@]}"; do
