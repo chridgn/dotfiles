@@ -1,6 +1,7 @@
-files=(
+dotfiles=(
     ".zshrc"
     ".zprofile"
+    ".tmux.conf"
     ".config/neofetch/config.conf"
     ".config/starship.toml"
 )
@@ -16,7 +17,7 @@ function setlink {
     echo "symlinked ~/$FILE to $FILE"
 }
 
-for FILE in "${files[@]}"; do
+for FILE in "${dotfiles[@]}"; do
     setlink $FILE
 done
 

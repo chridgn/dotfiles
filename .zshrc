@@ -35,4 +35,5 @@ v() {
   bash "$HOME/.local/bin/tmux-open-file-pane" "$file"
 }
 
-# with all things configured, start tmux
+# with all settings configured, start tmux
+tmux
