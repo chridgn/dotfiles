@@ -1,0 +1,75 @@
+# ~/.config/starship.toml
+# Clean, tmux-friendly, portable
+
+add_newline = false
+
+format = """
+$directory\
+$git_branch\
+$git_status\
+$python\
+$nodejs\
+$rust\
+$cmd_duration\
+$line_break\
+$character
+"""
+
+# Prompt symbol
+[character]
+success_symbol = "❯"
+error_symbol = "❯"
+vicmd_symbol = "❮"
+
+# Directory
+[directory]
+style = "bold cyan"
+truncation_length = 3
+truncate_to_repo = true
+
+# Git
+[git_branch]
+symbol = " "
+style = "bold purple"
+
+[git_status]
+style = "purple"
+conflicted = "≠"
+ahead = "⇡"
+behind = "⇣"
+diverged = "⇕"
+modified = "!"
+staged = "+"
+renamed = "»"
+deleted = "✘"
+
+# Language indicators (only show when relevant)
+[python]
+symbol = " "
+style = "yellow"
+detect_extensions = ["py"]
+detect_files = ["pyproject.toml", "requirements.txt"]
+
+[nodejs]
+symbol = " "
+style = "green"
+
+[rust]
+symbol = "🦀 "
+style = "red"
+
+# Command duration (only if slow)
+[cmd_duration]
+min_time = 1000
+format = "⏱ [$duration]($style) "
+style = "dimmed white"
+
+# Disable noisy modules
+[package]
+disabled = true
+
+[hostname]
+disabled = true
+
+[username]
+disabled = true
