@@ -128,7 +128,10 @@ end, { desc = "Focus Claude" })
 
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { noremap = true, desc = "Exit terminal mode" })
 
-vim.keymap.set("n", "<leader>q", "<cmd>qa<cr>", { desc = "Quit" })
+vim.keymap.set("n", "<leader>q", function()
+  vim.fn.system("tmux switch-client -t default-terminal")
+  vim.cmd("qa")
+end, { desc = "Quit and return to default terminal" })
 
 vim.keymap.set("n", "<leader>j", cycle_panes, { desc = "Cycle panes" })
 vim.keymap.set("t", "<leader>j", function()

@@ -53,12 +53,7 @@ v() {
   bash "$HOME/.local/bin/tmux-open-file-pane" "$file"
 }
 
-# Start or attach to a named tmux session (skip when running inside nvim)
-if [ -z "$NVIM" ]; then
-  if [ -z "$TMUX" ]; then
-    exec tmux new-session -A -s "${TMUX_SESSION_NAME:-$(basename "$PWD")}"
-  elif [ -n "$TMUX_SESSION_NAME" ]; then
-    tmux switch-tmux new-session -A -s "${TMUX_SESSION_NAME:-$(basename "$PWD")}"
-    client -t "$TMUX_SESSION_NAME"
-  fi
+# Start or attach to a named tmux session (skip when running inside nvim or tmux)
+if [ -z "$NVIM" ] && [ -z "$TMUX" ]; then
+  exec tmux new-session -A -s "default-terminal"
 fi
