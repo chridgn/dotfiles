@@ -93,13 +93,19 @@ local function cycle_panes()
 end
 
 -- Keymaps
-vim.keymap.set("n", "<leader>i", function()
+local function focus_neotree()
   for _, win in ipairs(vim.api.nvim_list_wins()) do
     if vim.bo[vim.api.nvim_win_get_buf(win)].filetype == "neo-tree" then
       vim.api.nvim_set_current_win(win)
       return
     end
   end
+end
+
+vim.keymap.set("n", "<leader>i", focus_neotree, { desc = "Focus Neo-tree" })
+vim.keymap.set("t", "<leader>i", function()
+  vim.cmd("stopinsert")
+  vim.defer_fn(focus_neotree, 10)
 end, { desc = "Focus Neo-tree" })
 
 vim.keymap.set("n", "<leader>e", focus_editor, { desc = "Focus editor" })
@@ -122,7 +128,14 @@ end, { desc = "Focus Claude" })
 
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { noremap = true, desc = "Exit terminal mode" })
 
-vim.keymap.set("n", "<leader>q", "<cmd>qa!<cr>", { desc = "Quit all" })
+vim.keymap.set("n", "<leader>q", function()
+  if os.getenv("TMUX") then
+    local session = vim.fn.system("tmux display-message -p '#S'"):gsub("%s+$", "")
+    vim.fn.jobstart("tmux kill-session -t " .. session)
+  else
+    vim.cmd("qa!")
+  end
+end, { desc = "Quit all" })
 
 vim.keymap.set("n", "<leader>j", cycle_panes, { desc = "Cycle panes" })
 vim.keymap.set("t", "<leader>j", function()
