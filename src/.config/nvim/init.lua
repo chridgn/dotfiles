@@ -128,14 +128,7 @@ end, { desc = "Focus Claude" })
 
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { noremap = true, desc = "Exit terminal mode" })
 
-vim.keymap.set("n", "<leader>q", function()
-  if os.getenv("TMUX") then
-    local session = vim.fn.system("tmux display-message -p '#S'"):gsub("%s+$", "")
-    vim.fn.jobstart("tmux kill-session -t " .. session)
-  else
-    vim.cmd("qa!")
-  end
-end, { desc = "Quit all" })
+vim.keymap.set("n", "<leader>q", "<cmd>qa<cr>", { desc = "Quit" })
 
 vim.keymap.set("n", "<leader>j", cycle_panes, { desc = "Cycle panes" })
 vim.keymap.set("t", "<leader>j", function()

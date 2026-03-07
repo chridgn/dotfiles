@@ -58,7 +58,7 @@ if [ -z "$NVIM" ]; then
   if [ -z "$TMUX" ]; then
     exec tmux new-session -A -s "${TMUX_SESSION_NAME:-$(basename "$PWD")}"
   elif [ -n "$TMUX_SESSION_NAME" ]; then
-    tmux new-session -d -s "$TMUX_SESSION_NAME" 2>/dev/null
-    tmux switch-client -t "$TMUX_SESSION_NAME"
+    tmux switch-tmux new-session -A -s "${TMUX_SESSION_NAME:-$(basename "$PWD")}"
+    client -t "$TMUX_SESSION_NAME"
   fi
 fi
