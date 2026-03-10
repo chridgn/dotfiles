@@ -61,6 +61,19 @@ local function focus_claude()
   if claude_win and vim.api.nvim_win_is_valid(claude_win) then
     vim.api.nvim_set_current_win(claude_win)
     vim.cmd("startinsert")
+  else
+    -- Find the editor window to split from
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+      local buf = vim.api.nvim_win_get_buf(win)
+      if vim.bo[buf].buftype == "" then
+        vim.api.nvim_set_current_win(win)
+        break
+      end
+    end
+    vim.cmd("rightbelow vsplit")
+    vim.cmd("terminal claude")
+    claude_win = vim.api.nvim_get_current_win()
+    vim.cmd("startinsert")
   end
 end
 
@@ -160,13 +173,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
     vim.cmd("wincmd k")
     vim.cmd("Neotree filesystem reveal left")
 
-    -- Move to editor (right of Neo-tree), then split right for Claude
+    -- Land on the editor (right of Neo-tree)
     vim.cmd("wincmd l")
-    vim.cmd("rightbelow vsplit")
-    vim.cmd("terminal claude")
-    claude_win = vim.api.nvim_get_current_win()
-
-    -- Land on the editor
-    vim.cmd("wincmd h")
   end,
 })
