@@ -1,6 +1,17 @@
 #!/bin/bash
 
-cd src
+cd "$(dirname "$0")"
+
+ZSH="$HOME/.oh-my-zsh"
+if [ ! -d "$ZSH" ]; then
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+else
+    echo "oh-my-zsh already installed."
+fi
+
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh)"
+brew update
 
 programs=(
     "zsh:.zshrc"
@@ -12,31 +23,40 @@ programs=(
 )
 
 function setlink {
-    local FILE=$1; 
+    local FILE=$1;
 
-    if [ -f ~/"$FILE" ]; then
+    if [ -f ~/"$FILE" ] || [ -L ~/"$FILE" ]; then
 	rm ~/"$FILE";
-    fi 
+    fi
 
-    ln "$FILE" ~/"$FILE";
-    echo "symlinked ~/$FILE to $FILE"
+    ln -s "$(pwd)/$FILE" ~/"$FILE";
+    echo "symlinked ~/$FILE -> $(pwd)/$FILE"
 }
 
 for PROGRAM in "${programs[@]}"; do
-    IFS=":" read -r -a arr <<< "$PROGRAM"
-    if [ "${arr[0]}" != "zsh" ]; then
-        if ! command -v "${arr[0]}" &> /dev/null; then
-	    brew install "${arr[0]}"
-	    else echo "${arr[0]} already installed."
+    prog="${PROGRAM%%:*}"
+    file="${PROGRAM#*:}"
+    if [ "$prog" != "zsh" ]; then
+        if ! command -v "$prog" &> /dev/null; then
+            if command -v brew &> /dev/null; then
+                brew install "$prog"
+            elif command -v apt-get &> /dev/null; then
+                sudo apt-get install -y "$prog"
+            else
+                echo "No package manager found to install $prog"
+            fi
+        else echo "$prog already installed."
         fi
     fi
-    setlink "${arr[1]}"
+    mkdir -p ~/$(dirname "$file")
+    setlink "$file"
 done
 
 # Custom installs
 if ! command -v claude &> /dev/null; then
     echo "Installing Claude Code"
-    curl -fsSL httpsL//claude.ai/install.sh | bash
+    curl -fsSL https://claude.ai/install.sh | bash
+    echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc && source ~/.zshrc
 else echo "Claude Code already installed."
 fi
 

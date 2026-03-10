@@ -57,3 +57,4 @@ v() {
 if [ -z "$NVIM" ] && [ -z "$TMUX" ]; then
   exec tmux new-session -A -s "default-terminal"
 fi
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh)"
