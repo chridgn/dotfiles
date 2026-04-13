@@ -1,0 +1,65 @@
+# =============================================================================
+# .zshrc_ext — interactive shell config
+# Sourced from ~/.zshrc
+# =============================================================================
+
+# --- Aliases: navigation -----------------------------------------------------
+alias ..="cd .."
+alias ...="cd ../.."
+alias ~="cd ~"
+
+# --- Aliases: listing --------------------------------------------------------
+if [[ "$(uname -s)" == "Darwin" ]]; then
+  alias ls="ls -G"
+else
+  alias ls="ls --color=auto"
+fi
+alias ll="ls -lhF"
+alias la="ls -lhAF"
+
+# --- Aliases: git ------------------------------------------------------------
+alias g="git"
+alias gs="git status"
+alias ga="git add"
+alias gc="git commit"
+alias gp="git push"
+alias gl="git pull"
+alias glog="git log --oneline --graph --decorate"
+alias gd="git diff"
+
+# --- Aliases: misc -----------------------------------------------------------
+alias reload="source ~/.zshrc"
+alias path='echo $PATH | tr ":" "\n"'
+alias cls="clear"
+
+# --- Functions ---------------------------------------------------------------
+
+# Make a directory and cd into it
+mkcd() {
+  mkdir -p "$1" && cd "$1"
+}
+
+# Open a file in a vertical tmux split to the right
+v() {
+  if [ -z "$1" ]; then
+    echo "Usage: v <filename>"
+    return 1
+  fi
+  if [ -z "$TMUX" ]; then
+    echo "v: no active tmux session"
+    return 1
+  fi
+  tmux split-window -h -c "#{pane_current_path}" "vim $1"
+}
+
+# Quick grep through current directory
+search() {
+  grep -r "$1" . --include="*.${2:-*}"
+}
+
+# --- fzf ---------------------------------------------------------------------
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# --- Prompt ------------------------------------------------------------------
+# Uncomment to use a simple custom prompt (or manage via starship/oh-my-zsh)
+# PROMPT='%F{cyan}%~%f %# '

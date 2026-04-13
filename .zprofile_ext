@@ -1,0 +1,33 @@
+# =============================================================================
+# .zprofile_ext — login shell environment
+# Sourced from ~/.zprofile
+# =============================================================================
+
+# --- OS detection ------------------------------------------------------------
+export OS_TYPE="$(uname -s)"  # Darwin | Linux
+
+# --- PATH --------------------------------------------------------------------
+export PATH="$HOME/.local/bin:$PATH"
+
+if [[ "$OS_TYPE" == "Darwin" ]]; then
+  # Apple Silicon Homebrew
+  [[ -d "/opt/homebrew/bin" ]] && export PATH="/opt/homebrew/bin:$PATH"
+  # Intel Homebrew fallback
+  [[ -d "/usr/local/bin" ]] && export PATH="/usr/local/bin:$PATH"
+elif [[ "$OS_TYPE" == "Linux" ]]; then
+  # Linuxbrew (if installed)
+  [[ -d "/home/linuxbrew/.linuxbrew/bin" ]] && export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
+fi
+
+# --- Editors -----------------------------------------------------------------
+export EDITOR="vim"
+export VISUAL="$EDITOR"
+
+# --- Language/tool version managers ------------------------------------------
+# nvm
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
+
+# --- Locale ------------------------------------------------------------------
+export LANG="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"
